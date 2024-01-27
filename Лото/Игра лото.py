@@ -1,15 +1,17 @@
 from projects.Project.Лото.Loto_class import Loto
 
+
 # Сама игра
 while True:
     mark_list = []                                                                                                      # Список с индексами игроков на исключение
     players_list = []                                                                                                   # Список игроков в игре
     winners_list = []                                                                                                   # Список победителей
-    loto_number = Loto()                                                                                                # Числа будут генерироваться из этой переменной дял всех
+    loto_number = Loto()                                                                                                # Игровые числа будут генерироваться из этой переменной дял всех игроков
     a = 0                                                                                                               # Количество игроков
     t_f = ''                                                                                                            # Бот или не бот
     y_n = ''                                                                                                            # Зачеркнуть число или нет
-    repeat = ''                                                                                                         # Продолжить игру или нет
+    repeat = ''                                                                                                         # Играть ещё раз в игру или нет
+
     # Инициализация игроков
     while a <= 0:
         try:
@@ -39,7 +41,7 @@ while True:
     # Приступаем к игровой сессии
     while True:
         mark_list = []                                                                                                  # Обнуляем список каждый раз
-        loto_number.get_random_number()                                                                                 # Получаем одно число на всех
+        loto_number.get_random_number()                                                                                 # Получаем одно число на всех каждый раз
         print(f"Новый бочонок: {loto_number.current_number} (осталось {len(loto_number.numbers_in_game)})")
         for i in players_list:                                                                                          # Показываем карты всех игроков
             i.show_card(i.player_name)
@@ -47,8 +49,9 @@ while True:
 
         for i in players_list:
             if i.bot:
-                i.pass_in_card()
-                i.card_number.remove(loto_number.current_number[0])
+                if loto_number.current_number[0] in i.card_number:
+                    i.pass_in_card()
+                    i.card_number.remove(loto_number.current_number[0])
             else:
                 y_n = ''                                                                                                # Сброс ответа, чтобы спрашивать каждого игрока
                 while y_n != 'y' and y_n != 'n':
@@ -63,29 +66,31 @@ while True:
                     print(f"Игрок {i.player_name} проиграл")
                     mark_list.append(i)
 
-                if not i.card_number:
-                    print(f'Игрок {i.player_name} закончил')
-                    winners_list.append(i)
-                    players_list.remove(i)
+            if not i.card_number:
+                print(f'Игрок {i.player_name} закончил')
+                winners_list.append(i)
+                mark_list.append(i)
 
         for i in range(len(mark_list)):
             players_list.remove(mark_list[i])
 
         if not players_list:
             print('*' * 50)
-            break
+            if not winners_list:
+                print('Все проиграли. Удачи в следующий раз!')
+                break
+            else:
+                for i in range(len(winners_list)):
+                    print(f'Игрок {winners_list[i].player_name} занял {i + 1} место')
+                break
 
         print('*' * 50)                                                                                                 # Разделение раундов
 
-        for i in range(len(winners_list)):
-            print(f'Игрок {winners_list[i].player_name} занял {i + 1} место')
-
-        if not winners_list:
-            print('Все проиграли. Удачи в следующий раз!')
-
+    print('*' * 50)
     while repeat != 'y' and repeat != 'n':
         repeat = input(f'Хотите сыграть ещё раз? (y,n) ')
-    if repeat == 'y':
-        continue
-    else:
+
+    print('*' * 50)
+
+    if repeat == 'n':
         break

@@ -62,14 +62,9 @@ class Loto:
         self.card = d
 
     def show_card(self, name=''):
-        if name == '':
-            print(25*'-')
-            print(self.card)
-            print(25*'-')
-        else:
-            print(name.center(25, '-'))
-            print(self.card)
-            print(25*'-')
+        print(name.center(25, '-'))
+        print(self.card)
+        print(25*'-')
 
     def pass_in_card(self):
         if self.current_number[0] > 9:
