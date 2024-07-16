@@ -10,6 +10,12 @@ class Loto:
         self.player_name = ''
         self.bot = None
 
+    def __str__(self):
+        return 'Made by Aksey_010'
+
+    def __eq__(self, other):
+        return self.card_number == other.card_number
+
     def refill_numbers_in_game(self):
         self.numbers_in_game = list(range(1, 91))
 
